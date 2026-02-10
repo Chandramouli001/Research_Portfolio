@@ -1,0 +1,51 @@
+[
+  {
+    "title": "Emergence of Transfer Learning towards Specific Identification of Alzheimer’s Disease – A Prospective Approach",
+    "type": "Conference Paper",
+    "year": 2025,
+    "doi": "10.1109/IEEECONF64992.2025.10962879",
+    "description": "This conference paper investigates the effectiveness of transfer learning techniques for the early and specific identification of Alzheimer’s Disease using medical imaging data. Pre-trained deep learning models are fine-tuned on domain-specific datasets to improve diagnostic accuracy while reducing training complexity and data dependency. The study highlights how transfer learning can enhance feature extraction in neuroimaging, enabling reliable detection of disease patterns at early stages and supporting clinical decision-making."
+  },
+  {
+    "title": "Design and Development of a Multi-Functional Interactive Robot with Handshake, AI Voice Assistance, Projection, and Mobility",
+    "type": "Journal Article",
+    "year": 2025,
+    "url": "https://ijsci.com/index.php/home/article/view/314",
+    "description": "This journal article presents the design and implementation of a multi-functional interactive robot capable of physical interaction through handshaking, AI-based voice assistance, visual projection, and autonomous mobility. The system integrates embedded control, speech recognition, and motion planning to enable natural human–robot interaction. The proposed architecture demonstrates the feasibility of deploying low-cost, intelligent service robots for educational, assistive, and public interaction environments."
+  },
+  {
+    "title": "RoboDoc: An Autonomous Medical Robot for Primary Health Assessment in Villages",
+    "type": "Conference Paper",
+    "year": 2025,
+    "url": "https://www.researchgate.net/publication/396144140_RoboDoc_An_Autonomous_Medical_Robot_for_Primary_Health_Assessment_in_Villages",
+    "description": "This paper introduces RoboDoc, an autonomous medical robot designed to provide primary health assessments in rural and underserved village areas. The system integrates biomedical sensors, embedded processing, and decision-support algorithms to measure vital health parameters such as heart rate, temperature, and blood pressure. RoboDoc aims to bridge healthcare accessibility gaps by enabling preliminary diagnosis, data logging, and remote consultation support in regions with limited medical infrastructure."
+  },
+  {
+    "title": "A Deep Neural Network Model for The Detection of Breast Cancer",
+    "type": "Conference Paper",
+    "year": 2025,
+    "url": "https://www.researchgate.net/publication/396176179_A_Deep_Neural_Network_Model_for_The_Detection_of_Breast_Cancer",
+    "description": "This conference paper proposes a deep neural network–based model for the automated detection of breast cancer using clinical and imaging datasets. The model leverages multilayer feature learning to distinguish between benign and malignant cases with high accuracy. The study emphasizes the role of deep learning in improving early diagnosis, reducing human error, and assisting healthcare professionals in making informed diagnostic decisions."
+  },
+  {
+    "title": "Use of Artificial Intelligence in Engineering",
+    "type": "Book",
+    "year": 2025,
+    "isbn": "979-8264115646",
+    "asin": "B0FQ6HY8SX",
+    "url": "https://www.amazon.com/dp/B0FQ6HY8SX",
+    "description": "This book provides a comprehensive overview of the application of artificial intelligence across various engineering domains. It covers fundamental AI concepts, machine learning techniques, and real-world case studies in areas such as automation, robotics, healthcare, and smart systems. The book serves as a practical reference for students, researchers, and professionals seeking to understand how AI-driven solutions can enhance efficiency, innovation, and decision-making in modern engineering."
+  },
+  {
+    "title": "IoT-based Heat Stress Adaptive Crop Recommendation System",
+    "type": "Patent",
+    "year": 2025,
+    "description": "This patent describes an Internet of Things (IoT)–based system designed to monitor environmental and crop parameters to address heat stress in agriculture. The system collects real-time data such as temperature, humidity, and soil conditions using distributed sensors and applies intelligent algorithms to recommend adaptive crop management strategies. The proposed solution aims to improve crop yield, resilience, and sustainability under changing climatic conditions."
+  },
+  {
+    "title": "Smart T-Shirt with Medical Monitoring",
+    "type": "Patent",
+    "year": 2025,
+    "description": "This patent presents a smart wearable T-shirt embedded with biomedical sensors for continuous health monitoring. The system is capable of tracking vital parameters such as heart rate, body temperature, and oxygen saturation, with integrated data processing and alert mechanisms. The smart T-shirt is designed for healthcare, elderly monitoring, and emergency response applications, offering a comfortable and non-invasive solution for real-time medical supervision."
+  }
+]

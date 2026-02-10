@@ -1,0 +1,526 @@
+:root {
+  --bg: #f9fafb;
+  --text: #1f2937;
+  --card-bg: #ffffff;
+  --accent: #2563eb;
+}
+[data-theme="dark"] {
+  --bg: #111827;
+  --text: #f9fafb;
+  --card-bg: #1f2937;
+  --accent: #3b82f6;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+  font-family: "Inter", sans-serif;
+}
+
+.portfolio-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background: var(--card-bg);
+  padding: 2rem;
+  border-right: 1px solid #e5e7eb;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid var(--accent);
+  margin-bottom: 1rem;
+}
+
+.name {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.role {
+  font-size: 1rem;
+  color: gray;
+  margin-bottom: 1rem;
+}
+
+.bio {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.bio-text{
+  text-align: justify;
+}
+.social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.social-links a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+h2 {
+  margin: 1.5rem 0 1rem;
+  font-size: 1.4rem;
+  border-bottom: 2px solid var(--accent);
+  display: inline-block;
+  padding-bottom: 0.3rem;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+li {
+  margin-bottom: 0.8rem;
+}
+
+/* Cards & Grid */
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+.card {
+  background: var(--card-bg);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+.card img {
+  width: 100%;
+  border-radius: 0.5rem;
+}
+
+/* Filter Buttons */
+.filters {
+  margin-bottom: 1rem;
+}
+.filters button {
+  margin-right: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  border: 1px solid #d1d5db;
+  background: var(--card-bg);
+  cursor: pointer;
+  color: #222; /* default text color */
+}
+
+[data-theme="dark"] .filters button {
+  color: #fff; /* white text in dark mode */
+  border-color: #555; /* optional: softer border in dark mode */
+}
+.filters .active {
+  background: var(--accent);
+  color: white;
+  border: none;
+}
+.theme-toggle-btn {
+  position: absolute;      /* position relative to the parent section */
+
+  right: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: 9999px;   /* fully rounded */
+  border: none;
+  background-color: var(--accent);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: background 0.3s, transform 0.2s;
+}
+
+.theme-toggle-btn:hover {
+  background-color: #1e40af; /* slightly darker on hover */
+  transform: translateY(-1px);
+}
+
+/* Social Links */
+.social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.social-links a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+.social-links a:hover {
+  background: var(--accent);
+  color: white;
+}
+.social-links .social-icon {
+  width: 18px;
+  height: 18px;
+  filter: invert(0.2);
+}
+
+/* Language Flags */
+.language-switch {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.language-switch img {
+  width: 28px;
+  height: 20px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: transform 0.2s;
+}
+
+.language-switch img:hover {
+  transform: scale(1.1);
+  border-color: var(--accent);
+}
+/* Disable hover effect for specific links */
+.no-hover {
+  background: transparent !important;
+  color: var(--accent) !important;
+  text-decoration: none !important;
+  cursor: default;
+}
+
+.no-hover:hover {
+  background: transparent !important;
+  color: var(--accent) !important;
+}
+
+/* Achievements Section Images */
+section img {
+  width: 100%;       /* Make it responsive to card width */
+  max-width: 250px;  /* Limit the maximum width */
+  height: auto;      /* Maintain aspect ratio */
+  display: block;
+  margin: 0 auto 1rem; /* Center the image and add bottom spacing */
+  border-radius: 8px;  /* Optional: rounded corners */
+  object-fit: contain; /* Ensure image scales without distortion */
+}
+/* Responsive Images for Achievements Section */
+/* Responsive layout for mobile */
+/* ===== Responsive Layout for Mobile ===== */
+@media (max-width: 768px) {
+  /* Stack sidebar on top of main content */
+
+  .portfolio-container {
+    flex-direction: column;
+    
+  }
+
+  /* Sidebar adjustments */
+  .sidebar {
+    width: auto;
+    height: auto;
+    position: relative;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 1.5rem 1rem;
+    text-align: center;
+  }
+
+  /* Profile pic smaller */
+  .profile-pic {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Name and role adjustments */
+  .name {
+    font-size: 1.3rem;
+  }
+  .role {
+    font-size: 0.9rem;
+  }
+
+  /* Social links smaller */
+  .social-links a {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.4rem;
+  }
+  .social-links .social-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Main content padding */
+  .main-content {
+    padding: 1.5rem 1rem;
+  }
+
+  /* Theme toggle button */
+  .theme-toggle-btn {
+    position: relative;
+    right: auto;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    padding: 0.35rem 0.7rem;
+  }
+
+  /* Cards & Grid adjustments */
+  .grid {
+    grid-template-columns: 1fr; /* Single column for mobile */
+    gap: 1rem;
+  }
+
+  /* Achievements images smaller */
+  section img {
+    max-width: 180px;
+  }
+
+  /* Filter buttons smaller */
+  .filters button {
+    padding: 0.3rem 0.7rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  /* Language flags smaller */
+  .language-switch img {
+    width: 24px;
+    height: 16px;
+  }
+  
+}
+
+/* Ensure long URLs break into multiple lines on small screens */
+.card a {
+  word-break: break-all;       /* Break anywhere if needed */
+  overflow-wrap: anywhere;     /* Alternative modern approach */
+  display: inline-block;       /* Helps with wrapping */
+  color: var(--accent);        /* Keep link color consistent */
+  text-decoration: underline;  /* Optional: underline links */
+}
+
+/* Optional: limit the width on mobile */
+@media (max-width: 768px) {
+  .card a {
+    max-width: 100%;
+  }
+}
+
+/* Bio Header */
+.bio-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Ensures responsiveness on small screens */
+  margin-bottom: 1rem;
+}
+
+.theme-toggle-btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border-radius: 9999px;
+  border: none;
+  background-color: var(--accent);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  transition: background 0.3s, transform 0.2s;
+}
+
+.theme-toggle-btn:hover {
+  background-color: #1e40af;
+  transform: translateY(-1px);
+}
+
+/* Optional: make button smaller on very small screens */
+@media (max-width: 480px) {
+  .theme-toggle-btn {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+.certificates-carousel {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  cursor: grab;
+}
+
+.certificates-carousel:active {
+  cursor: grabbing;
+}
+
+.certificates-track {
+  display: flex;
+  gap: 1rem;
+}
+
+.certificate-card {
+  min-width: 300px; /* Adjust width for one column */
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  background: var(--card, #fff);
+  padding: 0.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.certificate-card:hover {
+  transform: scale(1.03);
+}
+
+.certificate-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* ===== Image Click Zoom / Lightbox ===== */
+
+/* Overlay */
+.image-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  cursor: zoom-out;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Enlarged image */
+.image-modal img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  object-fit: contain;
+}
+
+/* Smooth animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Cursor hint on clickable images */
+.zoomable {
+  cursor: zoom-in;
+  transition: transform 0.2s ease;
+}
+
+.zoomable:hover {
+  transform: scale(1.02);
+}
+
+/* ===== Achievements Slider ===== */
+
+.achievements-carousel {
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem 0;
+  cursor: grab;
+}
+
+.achievements-carousel:active {
+  cursor: grabbing;
+}
+
+.achievements-track {
+  display: flex;
+  gap: 1rem;
+}
+
+.achievement-card {
+  min-width: 300px;
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  background: var(--card-bg);
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.achievement-card:hover {
+  transform: scale(1.03);
+}
+
+.achievement-card img {
+  width: 100%;
+  height: auto;
+  max-height: 220px;
+  object-fit: contain;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
+/* Navigation buttons inside image modal */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 3rem;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 50%;
+  z-index: 10000;
+}
+
+.nav-btn.left {
+  left: 20px;
+}
+
+.nav-btn.right {
+  right: 20px;
+}
+
+.nav-btn:hover {
+  background: rgba(0,0,0,0.7);
+}
+
+/* Hide arrows on very small screens (swipe still works) */
+@media (max-width: 480px) {
+  .nav-btn {
+    display: none;
+  }
+}
+
+

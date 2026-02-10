@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Global Innovation Internship Program ",
+    "description": "AIT, Bangkok 2025",
+    "image": "./img/ait1.jpeg"
+  },{
+    "title": "JIS Innovation Award",
+    "description": "Paper Publication 2025",
+    "image": "./img/innovation25.jpg"
+  },
+  {
+    "title": "JIS Puraskar",
+    "description": "Highest DGPA 2024",
+    "image": "./img/jispuraskar24.jpg"
+  },
+  {
+    "title": "Kriti Award",
+    "description": "Highest GPA 2023",
+    "image": "./img/kritiaward.jpg"
+  },
+  {
+    "title": "JIS Innovation Award",
+    "description": "Paper Publication 2022",
+    "image": "./img/innovation22.jpg"
+  }
+]
