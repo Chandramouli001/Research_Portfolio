@@ -7,6 +7,13 @@
     "description": "This conference paper investigates the effectiveness of transfer learning techniques for the early and specific identification of Alzheimer’s Disease using medical imaging data. Pre-trained deep learning models are fine-tuned on domain-specific datasets to improve diagnostic accuracy while reducing training complexity and data dependency. The study highlights how transfer learning can enhance feature extraction in neuroimaging, enabling reliable detection of disease patterns at early stages and supporting clinical decision-making."
   },
   {
+    "title": "Prospects and Challenges in UAV-Based Communication for Disaster Management",
+    "type": "Conference Paper",
+    "year": 2025,
+    "doi": "10.1109/AICARE66005.2025.11402816",
+    "description": "The paper proposes a hybrid UAV communication architecture (Satellite + LoRa + FANET) to ensure reliable, low-latency, and energy-efficient connectivity during disaster response operations."
+  },
+  {
     "title": "Design and Development of a Multi-Functional Interactive Robot with Handshake, AI Voice Assistance, Projection, and Mobility",
     "type": "Journal Article",
     "year": 2025,
