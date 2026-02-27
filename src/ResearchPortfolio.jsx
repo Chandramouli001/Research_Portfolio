@@ -67,40 +67,79 @@ const translatePage = async (targetLang) => {
         <p className="tagline">Passionate about bridging hardware & software</p>
         <p className="location">📍 Kolkata, India</p>
 
-        <div className="social-links">
-          <a className="no-hover">
-            <img src="https://img.icons8.com/?size=100&id=P7UIlhbpWzZm&format=png&color=000000" className="social-icon" />
-            Chandramoulihaldar@gmail.com
-          </a>
-          <a className="no-hover">
-            <img src="https://img.icons8.com/?size=100&id=35084&format=png&color=000000" className="social-icon" />
-            chandramouli@novatech-is.in
-          </a>
-          <a href="https://www.linkedin.com/in/chandramouli01/" target="_blank" rel="noreferrer">
-            <img src="https://img.icons8.com/?size=100&id=13930&format=png&color=000000" className="social-icon" />
-            LinkedIn
-          </a>
-          <a href="https://github.com/Chandramouli001" target="_blank" rel="noreferrer">
-            <img src="https://img.icons8.com/?size=100&id=63777&format=png&color=000000" className="social-icon" />
-            GitHub
-          </a>
-          <a href="https://www.youtube.com/@Chandram0uli" target="_blank" rel="noreferrer">
-            <img src="https://img.icons8.com/?size=100&id=19318&format=png&color=000000" className="social-icon" />
-            YouTube
-          </a>
-          <a href="https://scholar.google.com/citations?user=VXo1zqUAAAAJ&hl=en&oi=ao" target="_blank" rel="noreferrer">
-            <img src="https://img.icons8.com/?size=100&id=drPiDBy9kkJ3&format=png&color=000000" className="social-icon" />
-            Google Scholar
-          </a>
-          <a href="https://orcid.org/0009-0004-9759-194X" target="_blank" rel="noreferrer">
-            <img src="https://raw.githubusercontent.com/soulhydra101/img/refs/heads/main/orcididimage.png" className="social-icon" />
-            ORCID
-          </a>
-          <a href="https://www.researchgate.net/profile/Chandramouli-Haldar-4" target="_blank" rel="noreferrer">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5e/ResearchGate_icon_SVG.svg" className="social-icon" />
-            ResearchGate
-          </a>
-        </div>
+       <div className="social-links">
+  <a href="mailto:Chandramoulihaldar@gmail.com" className="no-hover">
+    <img
+      src="https://img.icons8.com/?size=100&id=P7UIlhbpWzZm&format=png&color=000000"
+      alt="Personal Email"
+      className="social-icon"
+    />
+    Chandramoulihaldar@gmail.com
+  </a>
+
+  <a href="mailto:chandramouli@novatech-is.in" className="no-hover">
+    <img
+      src="https://img.icons8.com/?size=100&id=35084&format=png&color=000000"
+      alt="Official Email"
+      className="social-icon"
+    />
+    chandramouli@novatech-is.in
+  </a>
+
+  <a href="https://www.linkedin.com/in/chandramouli01/" target="_blank" rel="noreferrer">
+    <img
+      src="https://img.icons8.com/?size=100&id=13930&format=png&color=000000"
+      alt="LinkedIn"
+      className="social-icon"
+    />
+    LinkedIn
+  </a>
+
+  <a href="https://github.com/Chandramouli001" target="_blank" rel="noreferrer">
+    <img
+      src="https://img.icons8.com/?size=100&id=63777&format=png&color=000000"
+      alt="GitHub"
+      className="social-icon"
+    />
+    GitHub
+  </a>
+
+  <a href="https://www.youtube.com/@Chandram0uli" target="_blank" rel="noreferrer">
+    <img
+      src="https://img.icons8.com/?size=100&id=19318&format=png&color=000000"
+      alt="YouTube"
+      className="social-icon"
+    />
+    YouTube
+  </a>
+
+  <a href="https://scholar.google.com/citations?user=VXo1zqUAAAAJ&hl=en&oi=ao" target="_blank" rel="noreferrer">
+    <img
+      src="https://img.icons8.com/?size=100&id=drPiDBy9kkJ3&format=png&color=000000"
+      alt="Google Scholar"
+      className="social-icon"
+    />
+    Google Scholar
+  </a>
+
+  <a href="https://orcid.org/0009-0004-9759-194X" target="_blank" rel="noreferrer">
+    <img
+      src="https://raw.githubusercontent.com/soulhydra101/img/refs/heads/main/orcididimage.png"
+      alt="ORCID"
+      className="social-icon"
+    />
+    ORCID
+  </a>
+
+  <a href="https://www.researchgate.net/profile/Chandramouli-Haldar-4" target="_blank" rel="noreferrer">
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/5/5e/ResearchGate_icon_SVG.svg"
+      alt="ResearchGate"
+      className="social-icon"
+    />
+    ResearchGate
+  </a>
+</div>
 
           {/* Language Switch Flags */}
 <div className="language-switch">
