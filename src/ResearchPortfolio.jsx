@@ -13,14 +13,12 @@ import gallery from "./data/gallery.json";
 
 // Research interests — UI metadata with icons, kept in component
 const researchInterests = [
-  { label: "Artificial Intelligence & Machine Learning", icon: "🧠" },
+  
   { label: "IoT & Embedded Systems",                    icon: "🔌" },
-  { label: "Geospatial Data Science",                   icon: "🌍" },
+  { label: "Artificial Intelligence & Machine Learning", icon: "🧠" },
   { label: "Edge Computing",                             icon: "⚡" },
   { label: "Human-Computer Interaction",                icon: "🖥️" },
-  { label: "Database Engineering",                      icon: "🗄️" },
-  { label: "Smart Infrastructure",                      icon: "🏙️" },
-  { label: "Natural Language Processing",               icon: "💬" },
+  { label: "Cloud Cmputing",               icon: "☁️" },
 ];
 
 // ─── TRANSLATION ──────────────────────────────────────────────────────────────
@@ -412,37 +410,39 @@ export default function ResearchPortfolio() {
           {/* ABOUT */}
           <section className="rp-section" id="about">
             <SectionHeading>About</SectionHeading>
-            <div className="bio-text">
-              <p>
-                Chandramouli Haldar is an undergraduate researcher and technology professional
-                from Kolkata, India, currently pursuing a{" "}
-                <strong>Bachelor of Technology in Computer Science &amp; Engineering</strong> at
-                Maulana Abul Kalam Azad University of Technology (MAKAUT), West Bengal. His
-                academic foundation is further reinforced by a{" "}
-                <strong>Diploma in Electronics &amp; Telecommunication Engineering</strong> from
-                the West Bengal State Council of Technical Education — providing a rare dual
-                perspective spanning both hardware and software disciplines.
-              </p>
-              <p>
-                He gained significant international academic exposure through a research internship
-                at the <strong>Asian Institute of Technology (AIT), Bangkok, Thailand</strong>, where
-                he worked on innovation-focused projects involving geospatial data analysis, QGIS
-                workflows, and real-world satellite datasets. This experience shaped his commitment
-                to applied, impact-driven research.
-              </p>
-              <p>
-                As <strong>Founder and Chief Technology Officer of NovaTech Innovative Solutions</strong>,
-                Chandramouli leads engineering strategy and product development for smart infrastructure
-                technologies. He also serves as{" "}
-                <strong>Junior Technical Faculty at Euphoria GenX</strong>, mentoring students in
-                database engineering, full-stack development, and hands-on MongoDB training.
-              </p>
-              <p>
-                Beyond technology, he is an active learner of the Japanese language — inspired by
-                Japan's thoughtful integration of centuries-old cultural heritage with world-leading
-                technological innovation.
-              </p>
-            </div>
+          <div className="bio-text">
+  <p>
+    Chandramouli Haldar has a strong passion for bridging hardware and software domains.
+    He has completed a <strong>Bachelor of Technology in Computer Science &amp; Engineering</strong> along with a{" "}
+    <strong>Diploma in Electronics &amp; Telecommunication Engineering</strong>, which makes him confident
+    in both hardware and software technologies and enables him to work across multidisciplinary engineering fields.
+  </p>
+
+  <p>
+    His research interests include <strong>Internet of Things (IoT), Edge Computing, Artificial Intelligence, Machine Learning, UAV systems, smart healthcare technologies, and intelligent automation</strong>.
+    His work focuses on integrating intelligent systems with real-world applications to build efficient and scalable solutions.
+  </p>
+
+  <p>
+    He has international academic exposure through a research internship at the{" "}
+    <strong>Asian Institute of Technology (AIT), Bangkok, Thailand</strong>, where he contributed to multiple
+    projects including prompt engineering, QGIS workflows, and geospatial data analysis.
+    He also received the <strong>Best Project Award</strong> for a carbon emission reduction idea.
+    This experience strengthened his approach toward international research and practical innovation.
+  </p>
+
+  <p>
+    He is actively engaged in technical education, providing training to college students in different domains
+    such as <strong>MongoDB, web development, and VLSI</strong>.
+    Along with this, he is the <strong>Founder and CEO of NovaTech Innovative Solutions</strong>,
+    where he leads the development of software and hardware-based solutions.
+  </p>
+
+  <p>
+    With a strong inclination toward innovation and entrepreneurship, Chandramouli is an enthusiastic learner
+    of the Japanese language, inspired by Japan’s unique balance of cultural heritage and advanced technological progress.
+  </p>
+</div>
           </section>
 
           {/* EXPERIENCE */}
