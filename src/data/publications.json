@@ -9,9 +9,16 @@
   {
     "title": "Prospects and Challenges in UAV-Based Communication for Disaster Management",
     "type": "Conference Paper",
-    "year": 2025,
+    "year": 2026,
     "doi": "10.1109/AICARE66005.2025.11402816",
     "description": "The paper proposes a hybrid UAV communication architecture (Satellite + LoRa + FANET) to ensure reliable, low-latency, and energy-efficient connectivity during disaster response operations."
+  },
+    {
+    "title": "An ESP32-Based Morse Code Transmission System Using Telegram Bot",
+    "type": "Preprint Article",
+    "year": 2026,
+    "doi": "10.20944/preprints202602.1999.v1",
+    "description": "This paper introduces a Morse code transmission system utilizing an ESP32 microcontroller and displaying the decoded message via a Telegram bot in real-time. "
   },
   {
     "title": "Design and Development of a Multi-Functional Interactive Robot with Handshake, AI Voice Assistance, Projection, and Mobility",
