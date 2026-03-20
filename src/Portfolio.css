@@ -1309,3 +1309,26 @@ a:hover {
   }
 }
 
+@media (max-width: 800px) {
+  .header-inner {
+    justify-content: space-between;
+  }
+
+  .header-nav {
+    display: none;
+    order: 3;
+  }
+
+  .header-brand {
+    order: 1;
+    margin-left: 0;
+  }
+
+  .header-controls {
+    order: 2;
+    margin-left: auto;
+  }
+
+  /* Hide theme toggle on mobile to save space — optional */
+  /* .theme-toggle { display: none; } */
+}
