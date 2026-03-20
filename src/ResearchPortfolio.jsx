@@ -1,352 +1,591 @@
 // ResearchPortfolio.jsx
-import React, { useState, useEffect } from "react";
-import "./App.css";
+import React, { useState, useEffect, useRef } from "react";
+import ReactDOM from "react-dom";
+import "./Portfolio.css";
 
-// JSON imports
+// ─── JSON DATA IMPORTS ────────────────────────────────────────────────────────
 import publications from "./data/publications.json";
-import experience from "./data/experience.json";
-import education from "./data/education.json";
-import researchInterests from "./data/researchInterests.json";
-import achievements from "./data/achievements.json";
+import experience   from "./data/experience.json";
+import education    from "./data/education.json";
+import awards       from "./data/achievements.json";
 import certificates from "./data/certificates.json";
+import gallery from "./data/gallery.json";
 
-export default function ResearchPortfolio() {
-  const [filter, setFilter] = useState("all");
-  const [theme, setTheme] = useState("light");
-  
-// Function to translate text using Google's free translate API (no key)
+// Research interests — UI metadata with icons, kept in component
+const researchInterests = [
+  { label: "Artificial Intelligence & Machine Learning", icon: "🧠" },
+  { label: "IoT & Embedded Systems",                    icon: "🔌" },
+  { label: "Geospatial Data Science",                   icon: "🌍" },
+  { label: "Edge Computing",                             icon: "⚡" },
+  { label: "Human-Computer Interaction",                icon: "🖥️" },
+  { label: "Database Engineering",                      icon: "🗄️" },
+  { label: "Smart Infrastructure",                      icon: "🏙️" },
+  { label: "Natural Language Processing",               icon: "💬" },
+];
+
+// ─── TRANSLATION ──────────────────────────────────────────────────────────────
 const translateText = async (text, targetLang) => {
   try {
-    const response = await fetch(
-      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(
-        text
-      )}`
+    const res = await fetch(
+      `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`
     );
-    const data = await response.json();
+    const data = await res.json();
     return data[0].map((item) => item[0]).join("");
-  } catch (error) {
-    console.error("Translation failed:", error);
+  } catch {
     return text;
   }
 };
 
-// Function to translate all visible text on the page
 const translatePage = async (targetLang) => {
-  const elements = document.querySelectorAll("h1, h2, h3, p, li, button, a");
-  for (const el of elements) {
-    const original = el.innerText.trim();
-    if (original) {
-      const translated = await translateText(original, targetLang);
-      el.innerText = translated;
+  const els = document.querySelectorAll("h1, h2, h3, p, li, button");
+  for (const el of els) {
+    const orig = el.innerText.trim();
+    if (orig && orig.length < 500) {
+      el.innerText = await translateText(orig, targetLang);
     }
   }
 };
 
-  // Image modal states (existing + added)
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [imageList, setImageList] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+// ─── NORMALISE item from any JSON shape ───────────────────────────────────────
+const normaliseItem = (item, srcKey, titleKey, captionKey) => ({
+  src:     item[srcKey]     || item.src     || item.image || "",
+  title:   item[titleKey]   || item.title   || "",
+  caption: item[captionKey] || item.caption || item.description || item.issuer || "",
+});
 
-  // Apply theme
+// ─── LIGHTBOX — rendered via Portal onto document.body ────────────────────────
+// This completely escapes any parent overflow / stacking context.
+function Lightbox({ images, startIndex, srcKey, titleKey, captionKey, onClose }) {
+  const [idx, setIdx]     = useState(startIndex);
+  const touchStartX       = useRef(null);
+  const item              = normaliseItem(images[idx], srcKey, titleKey, captionKey);
+
+  // Lock body scroll while open
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.key === "Escape")                                  onClose();
+      if (e.key === "ArrowRight" && idx < images.length - 1)  setIdx((i) => i + 1);
+      if (e.key === "ArrowLeft"  && idx > 0)                   setIdx((i) => i - 1);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [idx, images.length, onClose]);
+
+  const modal = (
+    <div
+      className="lb-overlay"
+      onClick={onClose}
+      onTouchStart={(e) => (touchStartX.current = e.changedTouches[0].screenX)}
+      onTouchEnd={(e) => {
+        const diff = touchStartX.current - e.changedTouches[0].screenX;
+        if (diff >  50 && idx < images.length - 1) setIdx((i) => i + 1);
+        if (diff < -50 && idx > 0)                 setIdx((i) => i - 1);
+      }}
+    >
+      {/* Close button */}
+      <button className="lb-close" onClick={onClose} aria-label="Close">✕</button>
+
+      {/* Prev */}
+      {idx > 0 && (
+        <button
+          className="lb-nav lb-prev"
+          onClick={(e) => { e.stopPropagation(); setIdx((i) => i - 1); }}
+          aria-label="Previous"
+        >‹</button>
+      )}
+
+      {/* Image + caption */}
+      <div className="lb-content" onClick={(e) => e.stopPropagation()}>
+        <img src={item.src} alt={item.title || item.caption} className="lb-img" />
+        {(item.title || item.caption) && (
+          <div className="lb-caption">
+            {item.title   && <strong>{item.title}</strong>}
+            {item.caption && <span>{item.caption}</span>}
+          </div>
+        )}
+        <p className="lb-counter">{idx + 1} / {images.length}</p>
+      </div>
+
+      {/* Next */}
+      {idx < images.length - 1 && (
+        <button
+          className="lb-nav lb-next"
+          onClick={(e) => { e.stopPropagation(); setIdx((i) => i + 1); }}
+          aria-label="Next"
+        >›</button>
+      )}
+    </div>
+  );
+
+  // Portal: render directly on <body>, outside all React tree stacking contexts
+  return ReactDOM.createPortal(modal, document.body);
+}
+
+// ─── CAROUSEL ─────────────────────────────────────────────────────────────────
+function Carousel({ id, title, items, srcKey = "src", titleKey = "title", captionKey = "caption" }) {
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+  const trackRef   = useRef(null);
+  const isDragging = useRef(false);
+  const dragStartX = useRef(0);
+  const dragScrollLeft = useRef(0);
+  const didDrag    = useRef(false); // distinguish drag from click
+
+  const onMouseDown = (e) => {
+    isDragging.current   = true;
+    didDrag.current      = false;
+    dragStartX.current   = e.pageX - trackRef.current.offsetLeft;
+    dragScrollLeft.current = trackRef.current.scrollLeft;
+    trackRef.current.style.cursor = "grabbing";
+  };
+
+  const onMouseMove = (e) => {
+    if (!isDragging.current) return;
+    e.preventDefault();
+    const x    = e.pageX - trackRef.current.offsetLeft;
+    const walk = (x - dragStartX.current) * 1.2;
+    if (Math.abs(walk) > 5) didDrag.current = true;
+    trackRef.current.scrollLeft = dragScrollLeft.current - walk;
+  };
+
+  const stopDrag = () => {
+    isDragging.current = false;
+    if (trackRef.current) trackRef.current.style.cursor = "grab";
+  };
+
+  const handleCardClick = (i) => {
+    // Only open lightbox if not dragging
+    if (!didDrag.current) setLightboxIndex(i);
+  };
+
+  return (
+    <section className="rp-section" id={id}>
+      <SectionHeading>{title}</SectionHeading>
+
+      <div
+        className="carousel-track"
+        ref={trackRef}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={stopDrag}
+        onMouseLeave={stopDrag}
+      >
+        {items.map((item, i) => {
+          const norm = normaliseItem(item, srcKey, titleKey, captionKey);
+          return (
+            <div
+              key={i}
+              className="carousel-card"
+              onClick={() => handleCardClick(i)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && setLightboxIndex(i)}
+              aria-label={norm.title || norm.caption || `Image ${i + 1}`}
+            >
+              <div className="carousel-img-wrap">
+                <img
+                  src={norm.src}
+                  alt={norm.title || norm.caption}
+                  loading="lazy"
+                  draggable="false"
+                  onError={(e) => {
+                    e.target.style.display = "none";
+                    e.target.parentElement.classList.add("img-error");
+                  }}
+                />
+                <div className="carousel-overlay">
+                  <span className="zoom-icon">⊕</span>
+                </div>
+              </div>
+              {(norm.title || norm.caption) && (
+                <div className="carousel-caption">
+                  {norm.title   && <strong>{norm.title}</strong>}
+                  {norm.caption && <span>{norm.caption}</span>}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Lightbox rendered via Portal — completely outside this DOM tree */}
+      {lightboxIndex !== null && (
+        <Lightbox
+          images={items}
+          startIndex={lightboxIndex}
+          srcKey={srcKey}
+          titleKey={titleKey}
+          captionKey={captionKey}
+          onClose={() => setLightboxIndex(null)}
+        />
+      )}
+    </section>
+  );
+}
+
+// ─── SECTION HEADING ──────────────────────────────────────────────────────────
+function SectionHeading({ children }) {
+  return (
+    <div className="section-heading">
+      <h2>{children}</h2>
+      <div className="heading-rule" />
+    </div>
+  );
+}
+
+// ─── ROOT COMPONENT ───────────────────────────────────────────────────────────
+export default function ResearchPortfolio() {
+  const [pubFilter, setPubFilter] = useState("all");
+  const [theme,     setTheme]     = useState("light");
+  const [menuOpen,  setMenuOpen]  = useState(false);
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
-  const filteredPublications =
-    filter === "all"
+  const filteredPubs =
+    pubFilter === "all"
       ? publications
-      : publications.filter((p) => p.type === filter);
+      : publications.filter((p) => p.type === pubFilter);
+
+  const pubTypes = ["all", "Conference Paper", "Journal Article", "Book", "Patent"];
+
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setMenuOpen(false);
+  };
+
+  const navLinks = [
+    { id: "about",        label: "About"        },
+    { id: "experience",   label: "Experience"   },
+    { id: "education",    label: "Education"    },
+    { id: "interests",    label: "Research"     },
+    { id: "publications", label: "Publications" },
+    { id: "awards",       label: "Awards"       },
+    { id: "certificates", label: "Certificates" },
+    { id: "gallery",      label: "Gallery"      },
+  ];
 
   return (
-    <div className={`portfolio-container ${theme}`}>
-      {/* Sidebar */}
-      <aside className="sidebar">
-        <img src="/img/dp.png" alt="Profile" className="profile-pic" />
-        <h1 className="name">Chandramouli Haldar</h1>
-        <p className="role">Student | Researcher | Innovator</p>
-        <p className="tagline">Passionate about bridging hardware & software</p>
-        <p className="location">📍 Kolkata, India</p>
+    <>
+      {/* ══════════════════════════════════ HEADER ══ */}
+      <header className="rp-header">
+        <div className="header-inner">
 
-       <div className="social-links">
-  <a href="mailto:Chandramoulihaldar@gmail.com" className="no-hover">
-    <img
-      src="https://img.icons8.com/?size=100&id=P7UIlhbpWzZm&format=png&color=000000"
-      alt="Personal Email"
-      className="social-icon"
-    />
-    Chandramoulihaldar@gmail.com
-  </a>
+          <div className="header-brand" onClick={() => scrollTo("about")}>
+            <span className="brand-initials">CH</span>
+            <span className="brand-name">Chandramouli Haldar</span>
+          </div>
 
-  <a href="mailto:chandramouli@novatech-is.in" className="no-hover">
-    <img
-      src="https://img.icons8.com/?size=100&id=35084&format=png&color=000000"
-      alt="Official Email"
-      className="social-icon"
-    />
-    chandramouli@novatech-is.in
-  </a>
+          <nav className={`header-nav${menuOpen ? " open" : ""}`}>
+            {navLinks.map((l) => (
+              <button key={l.id} className="nav-item" onClick={() => scrollTo(l.id)}>
+                {l.label}
+              </button>
+            ))}
+          </nav>
 
-  <a href="https://www.linkedin.com/in/chandramouli01/" target="_blank" rel="noreferrer">
-    <img
-      src="https://img.icons8.com/?size=100&id=13930&format=png&color=000000"
-      alt="LinkedIn"
-      className="social-icon"
-    />
-    LinkedIn
-  </a>
-
-  <a href="https://github.com/Chandramouli001" target="_blank" rel="noreferrer">
-    <img
-      src="https://img.icons8.com/?size=100&id=63777&format=png&color=000000"
-      alt="GitHub"
-      className="social-icon"
-    />
-    GitHub
-  </a>
-
-  <a href="https://www.youtube.com/@Chandram0uli" target="_blank" rel="noreferrer">
-    <img
-      src="https://img.icons8.com/?size=100&id=19318&format=png&color=000000"
-      alt="YouTube"
-      className="social-icon"
-    />
-    YouTube
-  </a>
-
-  <a href="https://scholar.google.com/citations?user=VXo1zqUAAAAJ&hl=en&oi=ao" target="_blank" rel="noreferrer">
-    <img
-      src="https://img.icons8.com/?size=100&id=drPiDBy9kkJ3&format=png&color=000000"
-      alt="Google Scholar"
-      className="social-icon"
-    />
-    Google Scholar
-  </a>
-
-  <a href="https://orcid.org/0009-0004-9759-194X" target="_blank" rel="noreferrer">
-    <img
-      src="https://raw.githubusercontent.com/soulhydra101/img/refs/heads/main/orcididimage.png"
-      alt="ORCID"
-      className="social-icon"
-    />
-    ORCID
-  </a>
-
-  <a href="https://www.researchgate.net/profile/Chandramouli-Haldar-4" target="_blank" rel="noreferrer">
-    <img
-      src="https://upload.wikimedia.org/wikipedia/commons/5/5e/ResearchGate_icon_SVG.svg"
-      alt="ResearchGate"
-      className="social-icon"
-    />
-    ResearchGate
-  </a>
-</div>
-
-          {/* Language Switch Flags */}
-<div className="language-switch">
-  <img
-    src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg"
-    alt="English"
-    onClick={() => window.location.reload()}
-  />
-  <img
-    src="https://upload.wikimedia.org/wikipedia/en/9/9e/Flag_of_Japan.svg"
-    alt="Japanese"
-    onClick={() => translatePage("ja")}
-  />
-</div>
-      </aside>
-
-      {/* Main Content */}
-      <main className="main-content">
-        {/* Bio */}
-        <section className="bio-section">
-          <div className="bio-header">
-            <h2>Bio</h2>
+          <div className="header-controls">
+            <div className="lang-flags">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/en/4/41/Flag_of_India.svg"
+                alt="English" title="English"
+                onClick={() => window.location.reload()}
+              />
+              <img
+                src="https://upload.wikimedia.org/wikipedia/en/9/9e/Flag_of_Japan.svg"
+                alt="日本語" title="Japanese"
+                onClick={() => translatePage("ja")}
+              />
+            </div>
             <button
-              className="theme-toggle-btn"
-              onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+              className="theme-toggle"
+              onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
+              title="Toggle theme"
             >
-              {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+              {theme === "light" ? "🌙" : "☀️"}
+            </button>
+            <button
+              className="hamburger"
+              onClick={() => setMenuOpen((m) => !m)}
+              aria-label="Menu"
+            >
+              {menuOpen ? "✕" : "☰"}
             </button>
           </div>
 
-          <p className="bio-text">
-            Chandramouli Haldar has an academic background in Computer Science and Engineering,
-            along with a diploma in Electronics and Telecommunication Engineering.
-          </p>
-          <p className="bio-text">
-            He has professional experience as a Junior Technical Faculty at Euphoria GenX,
-            contributing to mentoring, project guidance, and hands-on MongoDB training.
-          </p>
-          <p className="bio-text">
-            He gained international academic exposure through an innovation-focused internship
-            at the Asian Institute of Technology (AIT), Bangkok, working with geospatial data,
-            QGIS, and real-world datasets.
-          </p>
-          <p className="bio-text">
-            He is also an active learner of the Japanese language and is inspired by Japan’s
-            balance of tradition and advanced technology.
-          </p>
-        </section>
+        </div>
+      </header>
 
-        {/* Experience */}
-        <section>
-          <h2>Experience</h2>
-          <ul>
-            {experience.map((exp, i) => (
-              <li key={i}>
-                <strong>{exp.role}</strong> – {exp.organization} ({exp.year})
-              </li>
-            ))}
-          </ul>
-        </section>
+      {/* ══════════════════════════════════ LAYOUT ══ */}
+      <div className="rp-layout">
 
-        {/* Education */}
-        <section>
-          <h2>Education</h2>
-          <ul>
-            {education.map((edu, i) => (
-              <li key={i}>
-                {edu.degree}, {edu.institution} – {edu.year}
-              </li>
-            ))}
-          </ul>
-        </section>
+        {/* ════════════════ SIDEBAR ════ */}
+        <aside className="rp-sidebar">
 
-        {/* Research Interests */}
-        <section>
-          <h2>Research Interests</h2>
-          <div className="grid">
-            {researchInterests.map((interest, i) => (
-              <div key={i} className="card">{interest}</div>
-            ))}
-          </div>
-        </section>
-
-        {/* Publications */}
-        <section>
-          <h2>Publications</h2>
-          <div className="filters">
-            {["all", "Conference Paper", "Journal Article", "Book", "Patent"].map((type) => (
-              <button
-                key={type}
-                className={filter === type ? "active" : ""}
-                onClick={() => setFilter(type)}
-              >
-                {type}
-              </button>
-            ))}
+          <div className="profile-photo-wrap">
+            <img
+              src="/img/dp.png"
+              alt="Chandramouli Haldar"
+              className="profile-photo"
+              onError={(e) => {
+                e.target.src =
+                  "https://api.dicebear.com/7.x/initials/svg?seed=CH&backgroundColor=1b2d4f&textColor=ffffff&fontSize=38";
+              }}
+            />
           </div>
 
-          <ul>
-            {filteredPublications.map((pub, i) => (
-              <li key={i} className="card">
-                <h3>{pub.title}</h3>
-                <p><strong>{pub.type}</strong> | {pub.year}</p>
-                {pub.doi && <p>DOI: <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noreferrer">{pub.doi}</a></p>}
-                {pub.url && <p>URL: <a href={pub.url} target="_blank" rel="noreferrer">{pub.url}</a></p>}
-                <p>{pub.description}</p>
-              </li>
-            ))}
-          </ul>
-        </section>
+          <h1 className="sidebar-name">Chandramouli Haldar</h1>
+          <p className="sidebar-title">Student · Researcher · Innovator</p>
+          <p className="sidebar-sub">Bridging Hardware &amp; Software</p>
 
-        {/* Achievements */}
-        <section>
-          <h2>Achievements</h2>
-          <div className="achievements-carousel">
-            <div className="achievements-track">
-              {achievements.map((a, i) => (
-                <div key={i} className="achievement-card">
-                  <img
-                    src={a.image}
-                    alt={a.title}
-                    className="zoomable"
-                    onClick={() => {
-                      setImageList(achievements.map(x => x.image));
-                      setCurrentIndex(i);
-                      setSelectedImage(a.image);
-                    }}
-                  />
-                  <h3>{a.title}</h3>
-                  <p>{a.description}</p>
+          <hr className="sidebar-divider" />
+
+          <div className="sidebar-meta">
+            <div className="meta-row"><span>📍</span><span>Kolkata, India</span></div>
+          </div>
+
+          <div className="sidebar-stats">
+            <div className="stat-item">
+              <span className="stat-val">10+</span>
+              <span className="stat-lbl">Publications</span>
+            </div>
+            <div className="stat-div" />
+            <div className="stat-item">
+              <span className="stat-val">3+</span>
+              <span className="stat-lbl">Yrs Exp</span>
+            </div>
+            <div className="stat-div" />
+            <div className="stat-item">
+              <span className="stat-val">2</span>
+              <span className="stat-lbl">Countries</span>
+            </div>
+          </div>
+
+          <hr className="sidebar-divider" />
+
+          <nav className="sidebar-links">
+            <a href="mailto:Chandramoulihaldar@gmail.com" className="s-link">
+              <span className="s-icon">✉</span>
+              <span className="s-label">Chandramoulihaldar@gmail.com</span>
+            </a>
+            <a href="mailto:chandramouli@novatech-is.in" className="s-link">
+              <span className="s-icon">✉</span>
+              <span className="s-label">chandramouli@novatech-is.in</span>
+            </a>
+            <a href="https://www.linkedin.com/in/chandramouli01/" target="_blank" rel="noreferrer" className="s-link">
+              <span className="s-icon s-li">in</span>
+              <span className="s-label">LinkedIn Profile</span>
+            </a>
+            <a href="https://github.com/Chandramouli001" target="_blank" rel="noreferrer" className="s-link">
+              <span className="s-icon">⌥</span>
+              <span className="s-label">GitHub — Chandramouli001</span>
+            </a>
+            <a href="https://www.youtube.com/@Chandram0uli" target="_blank" rel="noreferrer" className="s-link">
+              <span className="s-icon">▶</span>
+              <span className="s-label">YouTube Channel</span>
+            </a>
+            <a href="https://scholar.google.com/citations?user=VXo1zqUAAAAJ&hl=en&oi=ao" target="_blank" rel="noreferrer" className="s-link">
+              <span className="s-icon">🎓</span>
+              <span className="s-label">Google Scholar</span>
+            </a>
+            <a href="https://orcid.org/0009-0004-9759-194X" target="_blank" rel="noreferrer" className="s-link">
+              <span className="s-icon s-orcid">iD</span>
+              <span className="s-label">ORCID: 0009-0004-9759-194X</span>
+            </a>
+            <a href="https://www.researchgate.net/profile/Chandramouli-Haldar-4" target="_blank" rel="noreferrer" className="s-link">
+              <span className="s-icon s-rg">RG</span>
+              <span className="s-label">ResearchGate Profile</span>
+            </a>
+          </nav>
+
+        </aside>
+
+        {/* ════════════════ MAIN ═══════ */}
+        <main className="rp-main">
+
+          {/* ABOUT */}
+          <section className="rp-section" id="about">
+            <SectionHeading>About</SectionHeading>
+            <div className="bio-text">
+              <p>
+                Chandramouli Haldar is an undergraduate researcher and technology professional
+                from Kolkata, India, currently pursuing a{" "}
+                <strong>Bachelor of Technology in Computer Science &amp; Engineering</strong> at
+                Maulana Abul Kalam Azad University of Technology (MAKAUT), West Bengal. His
+                academic foundation is further reinforced by a{" "}
+                <strong>Diploma in Electronics &amp; Telecommunication Engineering</strong> from
+                the West Bengal State Council of Technical Education — providing a rare dual
+                perspective spanning both hardware and software disciplines.
+              </p>
+              <p>
+                He gained significant international academic exposure through a research internship
+                at the <strong>Asian Institute of Technology (AIT), Bangkok, Thailand</strong>, where
+                he worked on innovation-focused projects involving geospatial data analysis, QGIS
+                workflows, and real-world satellite datasets. This experience shaped his commitment
+                to applied, impact-driven research.
+              </p>
+              <p>
+                As <strong>Founder and Chief Technology Officer of NovaTech Innovative Solutions</strong>,
+                Chandramouli leads engineering strategy and product development for smart infrastructure
+                technologies. He also serves as{" "}
+                <strong>Junior Technical Faculty at Euphoria GenX</strong>, mentoring students in
+                database engineering, full-stack development, and hands-on MongoDB training.
+              </p>
+              <p>
+                Beyond technology, he is an active learner of the Japanese language — inspired by
+                Japan's thoughtful integration of centuries-old cultural heritage with world-leading
+                technological innovation.
+              </p>
+            </div>
+          </section>
+
+          {/* EXPERIENCE */}
+          <section className="rp-section" id="experience">
+            <SectionHeading>Professional Experience</SectionHeading>
+            <div className="timeline">
+              {experience.map((exp, i) => (
+                <div key={i} className="tl-item">
+                  <div className="tl-marker">
+                    <div className="tl-dot" />
+                    {i < experience.length - 1 && <div className="tl-line" />}
+                  </div>
+                  <div className="tl-body">
+                    <div className="tl-top">
+                      <div>
+                        <h3 className="tl-role">{exp.role}</h3>
+                        <p className="tl-org">{exp.organization}</p>
+                      </div>
+                      <span className="tl-year">{exp.year}</span>
+                    </div>
+                    <p className="tl-desc">{exp.desc}</p>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Certificates */}
-        <section>
-          <h2>Certificates</h2>
-          <div className="certificates-carousel">
-            <div className="certificates-track">
-              {certificates.map((img, i) => (
-                <div key={i} className="certificate-card">
-                  <img
-                    src={img}
-                    alt={`Certificate ${i + 1}`}
-                    className="zoomable"
-                    onClick={() => {
-                      setImageList(certificates);
-                      setCurrentIndex(i);
-                      setSelectedImage(img);
-                    }}
-                  />
+          {/* EDUCATION */}
+          <section className="rp-section" id="education">
+            <SectionHeading>Education</SectionHeading>
+            <div className="edu-list">
+              {education.map((edu, i) => (
+                <div key={i} className="edu-card">
+                  <div className="edu-icon">🎓</div>
+                  <div className="edu-info">
+                    <h3 className="edu-degree">{edu.degree}</h3>
+                    <p className="edu-inst">{edu.institution}</p>
+                    <div className="edu-pills">
+                      <span className="pill pill-yr">{edu.year}</span>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Image Modal with Swipe */}
-        {selectedImage && (
-          <div
-            className="image-modal"
-            onClick={() => setSelectedImage(null)}
-            onTouchStart={(e) => (window._touchX = e.changedTouches[0].screenX)}
-            onTouchEnd={(e) => {
-              const diff = window._touchX - e.changedTouches[0].screenX;
-              if (diff > 50 && currentIndex < imageList.length - 1) {
-                setCurrentIndex(currentIndex + 1);
-                setSelectedImage(imageList[currentIndex + 1]);
-              }
-              if (diff < -50 && currentIndex > 0) {
-                setCurrentIndex(currentIndex - 1);
-                setSelectedImage(imageList[currentIndex - 1]);
-              }
-            }}
-          >
-            {currentIndex > 0 && (
-              <button
-                className="nav-btn left"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentIndex(currentIndex - 1);
-                  setSelectedImage(imageList[currentIndex - 1]);
-                }}
-              >
-                ‹
-              </button>
-            )}
+          {/* RESEARCH INTERESTS */}
+          <section className="rp-section" id="interests">
+            <SectionHeading>Research Interests</SectionHeading>
+            <div className="interest-grid">
+              {researchInterests.map((r, i) => (
+                <div key={i} className="interest-tag">
+                  <span>{r.icon}</span>
+                  <span>{r.label}</span>
+                </div>
+              ))}
+            </div>
+          </section>
 
-            <img src={selectedImage} alt="Enlarged view" />
+          {/* PUBLICATIONS */}
+          <section className="rp-section" id="publications">
+            <SectionHeading>Publications</SectionHeading>
+            <div className="pub-filters">
+              {pubTypes.map((t) => (
+                <button
+                  key={t}
+                  className={`pub-filter${pubFilter === t ? " active" : ""}`}
+                  onClick={() => setPubFilter(t)}
+                >
+                  {t === "all" ? "All Publications" : t}
+                </button>
+              ))}
+            </div>
+            <ol className="pub-list">
+              {filteredPubs.map((pub, i) => (
+                <li key={i} className="pub-item">
+                  <div className="pub-num">{String(i + 1).padStart(2, "0")}</div>
+                  <div className="pub-body">
+                    <span className="pub-type-badge">{pub.type}</span>
+                    <h3 className="pub-title">{pub.title}</h3>
+                    <p className="pub-desc">{pub.description}</p>
+                    <div className="pub-foot">
+                      <span className="pub-year">{pub.year}</span>
+                      {pub.doi && (
+                        <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noreferrer" className="pub-link">
+                          DOI: {pub.doi}
+                        </a>
+                      )}
+                      {pub.url && (
+                        <a href={pub.url} target="_blank" rel="noreferrer" className="pub-link">
+                          View Publication →
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
 
-            {currentIndex < imageList.length - 1 && (
-              <button
-                className="nav-btn right"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setCurrentIndex(currentIndex + 1);
-                  setSelectedImage(imageList[currentIndex + 1]);
-                }}
-              >
-                ›
-              </button>
-            )}
-          </div>
-        )}
-      </main>
-    </div>
+          {/* AWARDS — achievements.json: { title, description, image } */}
+          <Carousel
+            id="awards"
+            title="Awards & Recognitions"
+            items={awards}
+            srcKey="image"
+            titleKey="title"
+            captionKey="description"
+          />
+
+          {/* CERTIFICATES — certificates.json: { src, title, issuer } */}
+          <Carousel
+            id="certificates"
+            title="Certificates"
+            items={certificates}
+            srcKey="src"
+            titleKey="title"
+            captionKey="issuer"
+          />
+
+          {/* GALLERY — replace `certificates` with galleryData once gallery.json exists */}
+          <Carousel
+            id="gallery"
+            title="Gallery"
+            items={gallery}
+            srcKey="src"
+            titleKey="title"
+            captionKey="issuer"
+          />
+
+          {/* FOOTER */}
+          <footer className="rp-footer">
+            <p>© {new Date().getFullYear()} Chandramouli Haldar &nbsp;·&nbsp; All rights reserved</p>
+            <p className="footer-sub">
+              Kolkata, India &nbsp;|&nbsp; chandramouli@novatech-is.in &nbsp;|&nbsp;
+              <a href="https://orcid.org/0009-0004-9759-194X" target="_blank" rel="noreferrer">
+                ORCID: 0009-0004-9759-194X
+              </a>
+            </p>
+          </footer>
+
+        </main>
+      </div>
+    </>
   );
 }
