@@ -1,3 +1,42 @@
 [
- "./img/c6.jpeg","./img/c1.jpg", "./img/c5.jpeg","./img/c2.jpg","./img/c3.jpg","./img/c8.png","./img/c4.jpg", "./img/c7.jpeg"
+  {
+    "title": "Cirtificate of Athorship",
+    "description": "",
+    "image": "./img/c6.jpeg"
+  },
+  {
+    "title": "Best Paper Award",
+    "description": "",
+    "image": "./img/c1.jpg"
+  },
+  {
+    "title": "Cirtificate of Participation",
+    "description": "",
+    "image": "./img/c5.jpeg"
+  },
+  {
+    "title": "Cirtificate of Participation",
+    "description": "",
+    "image": "./img/c2.jpg"
+  },
+  {
+    "title": "Cirtificate of Presentation",
+    "description": "",
+    "image": "./img/c3.jpg"
+  },
+  {
+    "title": "Cirtificate of Publication",
+    "description": "",
+    "image": "./img/c8.png"
+  },
+  {
+    "title": "Cirtificate of Acivemnet",
+    "description": "",
+    "image": "./img/c4.jpg"
+  },
+  {
+    "title": "Cirtificate of Acivemnet",
+    "description": "",
+    "image": "./img/c7.jpeg"
+  }
 ]
