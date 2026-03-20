@@ -1,52 +1,42 @@
 [
   {
-    "title": "",
-    "description": "",
+    "title": "📍at JISCE",
+    "description": "Conducted BCT training on VLSI",
     "image": "./img/g1.png"
   },
   {
-    "title": "",
-    "description": "",
+    "title": "📍at JIS University",
+    "description": "Conducted BCT training on MongoDB",
     "image": "./img/g2.png"
   },
   {
-    "title": "",
-    "description": "",
+    "title": "📍at AIT, Bangkok",
+    "description": "for Global Innovation Internship Program",
     "image": "./img/g6.png"
   },
   {
-    "title": "",
-    "description": "",
+    "title": "📍at UEM, Kolkata",
+    "description": "for 3rd International Confernce (RAAISA 2025)",
     "image": "./img/g8.png"
   },
   {
-    "title": "",
-    "description": "",
+    "title": "Tech Winter Break organized by GDG",
+    "description": "Conducted a Session on TinyML",
     "image": "./img/g3.png"
   },
   {
-    "title": "",
-    "description": "",
+    "title": "📍at AIT, Bangkok",
+    "description": "with Dr. Rishi Jain Sir",
     "image": "./img/g4.png"
   },
   {
-    "title": "",
-    "description": "",
+    "title": "📍at AIT, Bangkok",
+    "description": "with Dr. Nitik kr. Tripathi Sir",
     "image": "./img/g5.png"
   },
   {
-    "title": "",
+    "title": "Global Innovation Internship Program",
     "description": "",
     "image": "./img/g7.png"
-  },
-  {
-    "title": "",
-    "description": "",
-    "image": "./img/g6.png"
-  },
-  {
-    "title": "",
-    "description": "",
-    "image": "./img/g8.png"
   }
 ]
